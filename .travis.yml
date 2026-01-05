@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+   - "0.10"
+before_install:
+  - mkdir travis-phantomjs
+  - wget https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2 -O $PWD/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2
+  - tar -xvf $PWD/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2 -C $PWD/travis-phantomjs
+  - export PATH=$PWD/travis-phantomjs:$PATH
+before_script:
+  - npm install -g grunt-cli
+  - npm install -g bower
+  - bundle install
+  - bower install
+  - grunt prod
+notifications:
+  email: true
+# Taken from:  https://github.com/mdix/es6-babel-browserify-karma-boilerplate/blob/master/.travis.yml#L3
+
+#trying test
