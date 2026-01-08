@@ -7920,7 +7920,7 @@ span.required {
     max-width: 51px;
     overflow: auto;
     overflow-x: hidden;
-    background: #082331;
+    background: #f9fafb;
     border-right: 1px solid #e0e0e0;
     -webkit-transition-duration: 500ms;
     -moz-transition-duration: 500ms;
@@ -7965,8 +7965,8 @@ span.required {
         padding: 12px 10px;
         color: #adbabd;
         transition-duration: 250ms;
-        border-bottom: 1px solid #1e313a;
-        border-top: 1px solid #0f181d; }
+        border-bottom: 1px solid #E5E7EB;
+        border-top: 1px solid #E5E7EB; }
         .left-nav ul li a i {
           display: inline-block;
           width: 28px;
@@ -7987,10 +7987,10 @@ span.required {
       display: block;
       height: 40px;
       padding: 12px 10px;
-      color: #adbabd;
+      color: #1A1F71;
       transition-duration: 250ms;
-      border-bottom: 1px solid #1e313a;
-      border-top: 1px solid #0f181d; }
+      border-bottom: 1px solid #E5E7EB;
+      border-top: 1px solid #E5E7EB; }
       .left-nav ul li a i {
         display: inline-block;
         width: 28px;
