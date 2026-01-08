@@ -28,6 +28,28 @@
 				console.error("Total Revenue report error:", error);
 				}
 			);
+
+			scope.activeLoans = 0;
+			scope.activeLoansGrowth = "0";
+
+			resourceFactory.runReportsResource.getReport(
+				{
+				reportSource: "Dashboard_Active_Loans",
+				R_officeId: officeId,
+				genericResultSet: true,
+				},
+				function (data) {
+				if (data.data && data.data.length > 0) {
+					const row = data.data[0].row;
+					scope.activeLoans = parseInt(row[0]) || 0;
+					scope.activeLoansGrowth = parseFloat(row[2]).toFixed(1);
+				}
+				},
+				function (error) {
+				console.error("Active Loans report error:", error);
+				}
+			);
+			
             
             scope.searchParams = ['create client', 'clients', 'create group', 'groups', 'centers', 'create center', 'configuration', 'tasks', 'templates', 'system users',
                                   'create template', 'create loan product', 'create saving product', 'roles', 'add role', 'configure maker checker tasks',
