@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ExpertSearchController: function (scope, resourceFactory, location, $rootScope, localStorageService) {
+        ExpertSearchController: function (scope, resourceFactory, location, $rootScope, $timeout, localStorageService) {
 			var currentUser = localStorageService.getFromLocalStorage("userData");
      		var officeId = currentUser && currentUser.officeId ? currentUser.officeId : null;
 
@@ -105,6 +105,141 @@
 				console.error("Collection Rate API Error:", error);
 				}
 			);
+
+			scope.graphView = "revenue";
+			scope.portfolioMonths = [];
+			scope.portfolioValues = [];
+
+			scope.loadPortfolioRevenue = function () {
+				resourceFactory.runReportsResource.getReport(
+				{
+					reportSource: "Dashboard_Portfolio_Revenue",
+					R_officeId: officeId,
+					genericResultSet: true,
+				},
+				function (data) {
+					scope.portfolioMonths = [];
+					scope.portfolioValues = [];
+
+					data.data.forEach(function (item) {
+					scope.portfolioMonths.push(item.row[0]);
+					scope.portfolioValues.push(parseFloat(item.row[2]));
+					});
+
+					scope.renderPortfolioChart();
+				},
+				function (error) {
+					console.error("Portfolio Revenue Error:", error);
+				}
+				);
+			};
+
+			scope.loadPortfolioExpenses = function () {
+				resourceFactory.runReportsResource.getReport(
+				{
+					reportSource: "Dashboard_Portfolio_Expenses",
+					R_officeId: officeId,
+					genericResultSet: true,
+				},
+				function (data) {
+					scope.portfolioMonths = [];
+					scope.portfolioValues = [];
+
+					data.data.forEach(function (item) {
+					scope.portfolioMonths.push(item.row[0]);
+					scope.portfolioValues.push(parseFloat(item.row[2]) || 0);
+					});
+
+					scope.renderPortfolioChart();
+				},
+				function (error) {
+					console.error("Portfolio Expenses Error:", error);
+				}
+				);
+			};
+
+			scope.setGraphView = function (type) {
+				scope.graphView = type;
+
+				if (type === "revenue") {
+				scope.currentChartLabel = "Revenue";
+				scope.currentChartColor = "#1A1F71";
+				scope.loadPortfolioRevenue();
+				} else {
+				scope.currentChartLabel = "Expenses";
+				scope.currentChartColor = "#7C2D12";
+				scope.loadPortfolioExpenses();
+				}
+			};
+
+			let portfolioChart = null;
+
+			scope.renderPortfolioChart = function () {
+				$timeout(function () {
+				const canvas = document.getElementById("portfolioChart");
+				if (!canvas) return;
+
+				const ctx = canvas.getContext("2d");
+
+				const existingChart = Chart.getChart(canvas);
+				if (existingChart) {
+					existingChart.destroy();
+				}
+
+				const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+				gradient.addColorStop(
+					0,
+					scope.graphView === "revenue"
+					? "rgba(26, 31, 113, 0.28)"
+					: "rgba(124, 45, 18, 0.28)"
+				);
+				gradient.addColorStop(1, "rgba(0,0,0,0)");
+
+				portfolioChart = new Chart(ctx, {
+					type: "line",
+					data: {
+					labels: scope.portfolioMonths,
+					datasets: [
+						{
+						label: scope.currentChartLabel,
+						data: scope.portfolioValues,
+						borderColor: scope.currentChartColor,
+						backgroundColor: gradient,
+						fill: true,
+						tension: 0.42,
+						borderWidth: 2,
+						pointRadius: 2.5,
+						pointBackgroundColor: scope.currentChartColor,
+						pointBorderWidth: 0,
+						},
+					],
+					},
+					options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: { display: false },
+					},
+					scales: {
+						x: {
+						grid: { display: false },
+						ticks: { color: "#6b7280", font: { size: 11 } },
+						},
+						y: {
+						grid: { display: false },
+						ticks: {
+							color: "#6b7280",
+							callback: (v) => (v === 0 ? "0" : v / 1000 + "k"),
+						},
+						},
+					},
+					},
+				});
+				}, 0);
+			};
+
+			scope.loadPortfolioRevenue();
+
            
             scope.searchParams = ['create client', 'clients', 'create group', 'groups', 'centers', 'create center', 'configuration', 'tasks', 'templates', 'system users',
                                   'create template', 'create loan product', 'create saving product', 'roles', 'add role', 'configure maker checker tasks',
@@ -285,7 +420,7 @@
         }
 
     });
-    mifosX.ng.application.controller('ExpertSearchController', ['$scope', 'ResourceFactory', '$location', "$rootScope", "localStorageService", mifosX.controllers.ExpertSearchController]).run(function ($log) {
+    mifosX.ng.application.controller('ExpertSearchController', ['$scope', 'ResourceFactory', '$location', "$rootScope", "$timeout", "localStorageService", mifosX.controllers.ExpertSearchController]).run(function ($log) {
         $log.info("ExpertSearchController initialized");
     });
 }(mifosX.controllers || {}));
