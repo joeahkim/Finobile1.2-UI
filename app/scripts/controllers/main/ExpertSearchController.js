@@ -1,10 +1,33 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ExpertSearchController: function (scope, resourceFactory, location) {
+        ExpertSearchController: function (scope, resourceFactory, location, $rootScope, localStorageService) {
+			var currentUser = localStorageService.getFromLocalStorage("userData");
+     		var officeId = currentUser && currentUser.officeId ? currentUser.officeId : null;
+
         	scope.dashModel = 'dashboard';
             scope.switch = function() {
 	        	location.path('/richdashboard');
-			}
+			};
+
+			scope.totalRevenue = 0;
+			scope.revenueGrowth = "0.0";
+
+			resourceFactory.runReportsResource.getReport(
+				{ reportSource: "Dashboard_Total_Revenue",
+					R_officeId: officeId,
+					genericResultSet: true,},
+				function (data) {
+				if (data.data && data.data.length > 0) {
+					const row = data.data[0].row;
+
+					scope.totalRevenue = parseFloat(row[0]) || 0;
+					scope.revenueGrowth = parseFloat(row[3]).toFixed(1);
+				}
+				},
+				function (error) {
+				console.error("Total Revenue report error:", error);
+				}
+			);
             
             scope.searchParams = ['create client', 'clients', 'create group', 'groups', 'centers', 'create center', 'configuration', 'tasks', 'templates', 'system users',
                                   'create template', 'create loan product', 'create saving product', 'roles', 'add role', 'configure maker checker tasks',
@@ -185,7 +208,7 @@
         }
 
     });
-    mifosX.ng.application.controller('ExpertSearchController', ['$scope', 'ResourceFactory', '$location', mifosX.controllers.ExpertSearchController]).run(function ($log) {
+    mifosX.ng.application.controller('ExpertSearchController', ['$scope', 'ResourceFactory', '$location', "$rootScope", "localStorageService", mifosX.controllers.ExpertSearchController]).run(function ($log) {
         $log.info("ExpertSearchController initialized");
     });
 }(mifosX.controllers || {}));
