@@ -240,6 +240,47 @@
 
 			scope.loadPortfolioRevenue();
 
+			scope.loanStatus = [];
+
+			const statusColors = {
+				Active: "#22c55e",
+				Pending: "#eab308",
+				Overdue: "#f97316",
+				Defaulted: "#ef4444",
+			};
+
+			resourceFactory.runReportsResource.getReport(
+				{
+				reportSource: "Dashboard_Loan_Status",
+				R_officeId: officeId,
+				genericResultSet: true,
+				},
+				function (data) {
+				scope.loanStatus = [];
+
+				data.data.forEach(function (item) {
+					scope.loanStatus.push({
+					label: item.row[0],
+					value: item.row[1],
+					animatedValue: 0,
+					color: statusColors[item.row[0]],
+					});
+				});
+
+				animateLoanStatus();
+				},
+				function (error) {
+				console.error("Loan Status report error:", error);
+				}
+			);
+
+			function animateLoanStatus() {
+				scope.loanStatus.forEach(function (item) {
+				$timeout(function () {
+					item.animatedValue = item.value;
+				}, 100);
+				});
+			}
            
             scope.searchParams = ['create client', 'clients', 'create group', 'groups', 'centers', 'create center', 'configuration', 'tasks', 'templates', 'system users',
                                   'create template', 'create loan product', 'create saving product', 'roles', 'add role', 'configure maker checker tasks',
