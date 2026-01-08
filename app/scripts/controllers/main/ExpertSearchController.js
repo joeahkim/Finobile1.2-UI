@@ -85,7 +85,27 @@
 				console.error("Dashboard_Disbursements report failed:", error);
 				}
 			);
-            
+
+
+			scope.collectionRate = 0;
+			scope.collectionRateGrowth = 0;
+
+			resourceFactory.runReportsResource.getReport(
+				{
+				reportSource: "Dashboard_Collection_Rate",
+				R_officeId: officeId,
+				genericResultSet: true,
+				},
+				function (data) {
+				const row = data.data[0].row;
+				scope.collectionRate = parseFloat(row[6]).toFixed(1);
+				scope.collectionRateGrowth = parseFloat(row[9]).toFixed(1);
+				},
+				function (error) {
+				console.error("Collection Rate API Error:", error);
+				}
+			);
+           
             scope.searchParams = ['create client', 'clients', 'create group', 'groups', 'centers', 'create center', 'configuration', 'tasks', 'templates', 'system users',
                                   'create template', 'create loan product', 'create saving product', 'roles', 'add role', 'configure maker checker tasks',
                                   'users', 'loan products', 'charges', 'saving products', 'offices', 'create office', 'currency configurations', 'user settings',
