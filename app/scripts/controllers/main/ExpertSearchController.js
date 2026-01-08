@@ -50,6 +50,41 @@
 				}
 			);
 			
+
+			scope.currentMonthDisbursements = 0;
+			scope.lastMonthDisbursements = 0;
+			scope.disbursementsGrowth = 0;
+
+			resourceFactory.runReportsResource.getReport(
+				{
+				reportSource: "Dashboard_Disbursements",
+				R_officeId: officeId,
+				genericResultSet: true,
+				},
+				function (data) {
+				if (data.data && data.data.length > 0) {
+					const row = data.data[0].row;
+
+					scope.currentMonthDisbursements = parseFloat(row[0]) || 0;
+					scope.lastMonthDisbursements = parseFloat(row[1]) || 0;
+
+					let growth = 0;
+					if (scope.lastMonthDisbursements > 0) {
+					growth =
+						((scope.currentMonthDisbursements -
+						scope.lastMonthDisbursements) /
+						scope.lastMonthDisbursements) *
+						100;
+					} else if (scope.currentMonthDisbursements > 0) {
+					growth = 100;
+					}
+					scope.disbursementsGrowth = growth.toFixed(1);
+				}
+				},
+				function (error) {
+				console.error("Dashboard_Disbursements report failed:", error);
+				}
+			);
             
             scope.searchParams = ['create client', 'clients', 'create group', 'groups', 'centers', 'create center', 'configuration', 'tasks', 'templates', 'system users',
                                   'create template', 'create loan product', 'create saving product', 'roles', 'add role', 'configure maker checker tasks',
