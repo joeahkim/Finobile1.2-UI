@@ -282,6 +282,66 @@
 				});
 			}
            
+			scope.recentTransactions = [];
+
+			resourceFactory.runReportsResource.getReport(
+				{
+				reportSource: "Dashboard_Recent_Transactions",
+				R_officeId: officeId,
+				genericResultSet: true,
+				},
+				function (data) {
+				scope.recentTransactions = [];
+
+				if (!data.data || !data.data.length) {
+					return;
+				}
+
+				data.data.forEach(function (item) {
+					const row = item.row;
+
+					scope.recentTransactions.push({
+					transaction_id: row[0],
+					loan_id: row[1],
+					name: row[2],
+					transaction_type: row[3],
+					amount: parseFloat(row[4]),
+					description: row[5],
+					created_date: row[6],
+					timeAgo: timeAgo(row[8]),
+					});
+				});
+				},
+				function (error) {
+				console.error("Recent Transactions report error:", error);
+				}
+			);
+
+			function timeAgo(dateString) {
+				if (!dateString) return "";
+
+				const isoString = dateString.replace(" ", "T").split(".")[0];
+
+				const past = new Date(isoString);
+				if (isNaN(past.getTime())) return "";
+
+				const now = new Date();
+				const diffSeconds = Math.floor((now - past) / 1000);
+
+				if (diffSeconds < 60) return diffSeconds + " sec ago";
+
+				const diffMinutes = Math.floor(diffSeconds / 60);
+				if (diffMinutes < 60) return diffMinutes + " min ago";
+
+				const diffHours = Math.floor(diffMinutes / 60);
+				if (diffHours < 24) return diffHours + " hr ago";
+
+				const diffDays = Math.floor(diffHours / 24);
+				if (diffDays === 1) return "Yesterday";
+
+				return diffDays + " days ago";
+			}
+
             scope.searchParams = ['create client', 'clients', 'create group', 'groups', 'centers', 'create center', 'configuration', 'tasks', 'templates', 'system users',
                                   'create template', 'create loan product', 'create saving product', 'roles', 'add role', 'configure maker checker tasks',
                                   'users', 'loan products', 'charges', 'saving products', 'offices', 'create office', 'currency configurations', 'user settings',
