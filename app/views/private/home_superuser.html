@@ -1,26 +1,190 @@
 <div class="content-container">
-<div class="card well" id="expertsearch" data-ng-controller="ExpertSearchController">
-    <h3 class="paddedleft"><strong>{{'label.heading.welcome' | translate}}, {{currentSession.user.name}}</strong>
-    	<div class="btn-group pull-right">
-	        <label class="btn btn-primary" ng-model="dashModel" btn-radio="'dashboard'">{{'label.heading.home' | translate}}</label>
-	        <label class="btn btn-primary" ng-click="switch()" ng-model="dashModel" btn-radio="'rich-dashboard'">{{'label.heading.dashboard' | translate}}</label>
-	    </div>
-    </h3>
-    <hr/>
-    <input id="expert" type="text" data-ng-model="formData.search"
-	    placeholder="{{'label.input.searchactivities' | translate}}" class="col-md-4 form-control" typeahead-on-select="search()"
-	    ng-autofocus="true" uib-typeahead="param as param for param in searchParams | filter:$viewValue | limitTo:8"/>
-    <div id="home" class="row">
-    	<div class="col-md-8">
-    		<h3>{{'label.heading.navigation.guide' | translate}}: </h3>
-			<i class="fa fa-arrow-left"></i>{{'label.heading.left.shortcuts' | translate}} &nbsp;&nbsp;
-			<i class="fa fa-arrow-up"></i>{{'label.heading.top.menu' | translate}} &nbsp;&nbsp;
-			<i class="fa fa-arrow-up top-right"></i>{{'label.heading.right.search' | translate}}
-    	</div>
-	    <div class="col-md-6 col-md-offset-3">
-			<img src="./images/finobile-vertical.png" alt="MifosX" class="img-responsive" ng-if="!isLargeLogoPath">
-			<img src="{{largeLogoPath}}" alt="MifosX" class="img-responsive" ng-if="isLargeLogoPath">
-	    </div>
+  <div class="card well" id="expertsearch" data-ng-controller="ExpertSearchController">
+    <div class="container-fluid" ng-controller="ExpertSearchController">
+      <div class="overview-header">
+        <div class="overview-text">
+          <h3 class="overview-title">Lending Overview</h3>
+          <p class="overview-subtitle">Track your portfolio performance</p>
+        </div>
+
+        <div class="overview-actions">
+          <!-- <button class="btn-export">Export</button> -->
+
+          <button
+            class="btn-newloan"
+            ng-click="switch()"
+            ng-model="dashModel"
+            btn-radio="'rich-dashboard'">
+            <span class="plus-icon"></span> Dashboard
+          </button>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-box">
+          <div class="metric-header">
+            <div class="metric-title">Total Revenue</div>
+            <div class="metric-icon-bubble green-bg">
+              <i class="fa fa-money green-icon"></i>
+            </div>
+          </div>
+          <div class="metric-value">KES {{ totalRevenue | number: 0}}</div>
+          <div class="metric-footer">
+            <span class="metric-growth green-text">+{{ revenueGrowth }}%</span>
+            <span class="metric-subtext">from last month</span>
+          </div>
+        </div>
+
+        <!-- Active Loans -->
+        <div class="metric-box">
+          <div class="metric-header">
+            <div class="metric-title">Active Loans</div>
+            <div class="metric-icon-bubble blue-bg">
+              <i class="fa fa-briefcase blue-icon"></i>
+            </div>
+          </div>
+          <div class="metric-value">+{{ activeLoans | number:0 }}</div>
+          <div class="metric-footer">
+            <span class="metric-growth green-text"
+              >+{{ activeLoansGrowth }}%</span
+            >
+            <span class="metric-subtext">from last month</span>
+          </div>
+        </div>
+
+        <!-- Disbursements -->
+        <div class="metric-box">
+          <div class="metric-header">
+            <div class="metric-title">Disbursements</div>
+            <div class="metric-icon-bubble orange-bg">
+              <i class="fa fa-send orange-icon"></i>
+            </div>
+          </div>
+          <div class="metric-value">
+            +{{ currentMonthDisbursements | number:0 }}
+          </div>
+          <div class="metric-footer">
+            <span class="metric-growth green-text"
+              >+{{ disbursementsGrowth >= 0 ? '+' : '' }}{{ disbursementsGrowth
+              }}%</span
+            >
+            <span class="metric-subtext">from last month</span>
+          </div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-header">
+            <div class="metric-title">Collection Rate</div>
+            <div class="metric-icon-bubble purple-bg">
+              <i class="fa fa-calendar purple-icon"></i>
+            </div>
+          </div>
+          <div class="metric-value">{{ collectionRate }}%</div>
+          <div class="metric-footer">
+            <span class="metric-growth green-text"
+              >+{{ collectionRateGrowth }}%</span
+            >
+            <span class="metric-subtext">from last month</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Overview + Loan Status -->
+      <div class="portfolio-grid">
+        <div class="portfolio-card">
+          <div class="portfolio-header">
+            <div>
+              <h4 class="portfolio-title">Portfolio Overview</h4>
+              <p class="portfolio-subtext">
+                {{portfolioMonths[0]}} –
+                {{portfolioMonths[portfolioMonths.length - 1]}}
+              </p>
+            </div>
+
+            <div class="portfolio-btn-group">
+              <button
+                class="portfolio-btn active-btn"
+                ng-class="{'active-btn': graphView=='revenue'}"
+                ng-click="setGraphView('revenue')">
+                Revenue
+              </button>
+
+              <button
+                class="portfolio-btn"
+                ng-class="{'active-btn': graphView=='expenses'}"
+                ng-click="setGraphView('expenses')">
+                Expenses
+              </button>
+            </div>
+          </div>
+
+          <div class="portfolio-chart-container">
+            <canvas id="portfolioChart"></canvas>
+          </div>
+        </div>
+
+        <div class="loan-status-card">
+          <h4 class="loan-status-title">Loan Status</h4>
+
+          <div class="loan-status-item" ng-repeat="item in loanStatus">
+            <div class="loan-status-label-row">
+              <span class="loan-status-label">{{item.label}}</span>
+              <span class="loan-status-value">{{item.value}}%</span>
+            </div>
+
+            <div class="loan-status-bar-background">
+              <div
+                class="loan-status-bar-fill"
+                ng-style="{'width': item.value + '%', 'background-color': item.color}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="transactions-card">
+        <div class="transactions-header">
+          <h4 class="transactions-title">Recent Transactions</h4>
+          <button class="transactions-viewall">View all →</button>
+        </div>
+
+        <div class="transactions-list">
+          <div class="transaction-row" ng-repeat="txn in recentTransactions">
+            <div class="transaction-left">
+              <div
+                class="transaction-icon"
+                ng-class="{
+                    'icon-green': txn.transaction_type === 'repayment' || txn.transaction_type === 'payment',
+                    'icon-orange': txn.transaction_type === 'disbursement',
+                    'icon-red': txn.transaction_type === 'writeoff',
+                    'icon-gray': txn.transaction_type === 'credit'
+                  }">
+                <i
+                  class="fa"
+                  ng-class="{
+                    'fa-arrow-up': txn.amount > 0,
+                    'fa-arrow-down': txn.amount < 0
+                  }">
+                </i>
+              </div>
+
+              <div>
+                <div class="transaction-title">{{txn.description}}</div>
+                <div class="transaction-meta">
+                  {{txn.name}} • Loan #{{txn.loan_id}} • {{txn.timeAgo}}
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="transaction-amount"
+              ng-class="{
+          'amount-green': txn.amount > 0,
+          'amount-red': txn.amount < 0
+        }">
+              {{txn.amount | currency:'KES '}}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 </div>
