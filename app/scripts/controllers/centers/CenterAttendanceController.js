@@ -6,7 +6,6 @@
             scope.formData = {};
             scope.first = {};
             scope.first.date = new Date();
-            scope.centerId = routeParams.centerId;
             resourceFactory.centerResource.get({centerId: routeParams.centerId, associations: 'groupMembers,collectionMeetingCalendar'}, function (data) {
                 scope.center = data;
                 scope.meeting = data.collectionMeetingCalendar;
@@ -48,5 +47,3 @@
         $log.info("CenterAttendanceController initialized");
     });
 }(mifosX.controllers || {}));
-
-
