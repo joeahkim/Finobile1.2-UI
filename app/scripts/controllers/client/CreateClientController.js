@@ -26,9 +26,6 @@
             entityname="ADDRESS";
             scope.addressArray=[];
             scope.formData.address=[];
-            //familymembers
-            scope.formData.familyMembers=[];
-            scope.familyArray=[];
             scope.datatables = [];
             scope.noOfTabs = 1;
             scope.step = '-';
@@ -127,14 +124,6 @@
 
                 }
 
-
-                scope.relationshipIdOptions=data.familyMemberOptions.relationshipIdOptions;
-                scope.genderIdOptions=data.familyMemberOptions.genderIdOptions;
-                scope.maritalStatusIdOptions=data.familyMemberOptions.maritalStatusIdOptions;
-                scope.professionIdOptions=data.familyMemberOptions.professionIdOptions;
-
-
-
             });
 
             scope.updateColumnHeaders = function(columnHeaderData) {
@@ -164,23 +153,7 @@
 
 
 
-            // end of address
-
-
-            // family members
-
-            scope.addFamilyMember=function()
-            {
-                scope.familyArray.push({});
-            }
-
-            scope.removeFamilyMember=function(index)
-            {
-                scope.familyArray.splice(index,1);
-            }
-
-
-            // end of family members
+// end of address
 
 
 
@@ -246,6 +219,10 @@
             };
 
             scope.submit = function () {
+                if (WizardHandler.wizard().getCurrentStep() != scope.noOfTabs) {
+                    WizardHandler.wizard().next();
+                    return;
+                }
                 var reqDate = dateFilter(scope.first.date, scope.df);
 
                 this.formData.locale = scope.optlang.code;
@@ -377,69 +354,6 @@
                         scope.formData.address.push(temp);
                     }
                 }
-
-
-                // family array
-
-                for(var i=0;i<scope.familyArray.length;i++)
-                {
-                    var temp=new Object();
-                    if(scope.familyArray[i].relationshipId)
-                    {
-                        temp.relationshipId=scope.familyArray[i].relationshipId;
-                    }
-                    if(scope.familyArray[i].firstName)
-                    {
-                        temp.firstName=scope.familyArray[i].firstName;
-                    }
-                    if(scope.familyArray[i].middleName)
-                    {
-                        temp.middleName=scope.familyArray[i].middleName;
-                    }
-                    if(scope.familyArray[i].lastName)
-                    {
-                        temp.lastName=scope.familyArray[i].lastName;
-                    }
-                    if(scope.familyArray[i].qualification)
-                    {
-                        temp.qualification=scope.familyArray[i].qualification;
-                    }
-                    if(scope.familyArray[i].mobileNumber)
-                    {
-                        temp.mobileNumber=scope.familyArray[i].mobileNumber;
-                    }
-                    if(scope.familyArray[i].age)
-                    {
-                        temp.age=scope.familyArray[i].age;
-                    }
-                    if(scope.familyArray[i].isDependent)
-                    {
-                        temp.isDependent=scope.familyArray[i].isDependent;
-                    }
-                    if(scope.familyArray[i].genderId)
-                    {
-                        temp.genderId=scope.familyArray[i].genderId;
-                    }
-                    if(scope.familyArray[i].professionId)
-                    {
-                        temp.professionId=scope.familyArray[i].professionId;
-                    }
-                    if(scope.familyArray[i].maritalStatusId)
-                    {
-                        temp.maritalStatusId=scope.familyArray[i].maritalStatusId;
-                    }
-                    if(scope.familyArray[i].dateOfBirth)
-                    {
-
-                        temp.dateOfBirth=dateFilter(scope.familyArray[i].dateOfBirth, scope.df);
-                    }
-
-                    temp.locale = scope.optlang.code;
-                    temp.dateFormat = scope.df;
-                    scope.formData.familyMembers.push(temp);
-                }
-
-                //
 
 
 
