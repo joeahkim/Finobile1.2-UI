@@ -1,22 +1,21 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ViewAccountingClosureController: function (scope, resourceFactory, location, routeParams, $uibModal) {
-            scope.accountClosure = {};
-            scope.choice = 0;
-            resourceFactory.accountingClosureResource.getView({accId: routeParams.id}, function (data) {
-                scope.accountClosure = data;
+        ViewAccRuleController: function (scope, resourceFactory, routeParams, location, $uibModal) {
+
+            resourceFactory.accountingRulesResource.getById({accountingRuleId: routeParams.id}, function (data) {
+                scope.rule = data;
             });
-            scope.deleteAcc = function () {
+            scope.deleteRule = function () {
                 $uibModal.open({
-                    templateUrl: 'deleteacc.html',
-                    controller: AccDeleteCtrl
+                    templateUrl: 'deleteaccrule.html',
+                    controller: AccRuleDeleteCtrl
                 });
             };
-            var AccDeleteCtrl = function ($scope, $uibModalInstance) {
+            var AccRuleDeleteCtrl = function ($scope, $uibModalInstance) {
                 $scope.delete = function () {
-                    resourceFactory.accountingClosureResource.delete({accId: routeParams.id}, {}, function (data) {
+                    resourceFactory.accountingRulesResource.delete({accountingRuleId: routeParams.id}, {}, function (data) {
                         $uibModalInstance.close('delete');
-                        location.path('/accounts_closure');
+                        location.path('/accounting_rules');
                     });
                 };
                 $scope.cancel = function () {
@@ -26,7 +25,7 @@
 
         }
     });
-    mifosX.ng.application.controller('ViewAccountingClosureController', ['$scope', 'ResourceFactory', '$location', '$routeParams', '$uibModal', mifosX.controllers.ViewAccountingClosureController]).run(function ($log) {
-        $log.info("ViewAccountingClosureController initialized");
+    mifosX.ng.application.controller('ViewAccRuleController', ['$scope', 'ResourceFactory', '$routeParams', '$location', '$uibModal', mifosX.controllers.ViewAccRuleController]).run(function ($log) {
+        $log.info("ViewAccRuleController initialized");
     });
 }(mifosX.controllers || {}));

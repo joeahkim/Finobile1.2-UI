@@ -95,4 +95,4 @@
     mifosX.ng.application.controller('JournalEntryController', ['$scope', 'ResourceFactory', '$location', 'dateFilter', mifosX.controllers.JournalEntryController]).run(function ($log) {
         $log.info("JournalEntryController initialized");
     });
-}(mifosX.controllers || {}));
+}(mifosX.controllers || {}));;

@@ -40,7 +40,6 @@
                 return obj;
             }
 
-            scope.ChartsPerPage = 15;
             resourceFactory.accountCoaResource.getAllAccountCoas(function (data) {
                 scope.coadatas = scope.deepCopy(data);
                 scope.ASSET = translate.instant('ASSET') ;
