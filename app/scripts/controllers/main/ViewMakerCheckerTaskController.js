@@ -8,5 +8,3 @@
         $log.info("ViewMakerCheckerTaskController initialized");
     });
 }(mifosX.controllers || {}));
-
-
