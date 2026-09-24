@@ -52,8 +52,9 @@
             };
 
             scope.entityChange = function (entityId) {
+                scope.mappers.splice(0, 1);
                 if (entityId !== 0) {
-                    scope.mappers.splice(0, 1, {
+                    scope.mappers.push({
                         mappersorder: 0,
                         mapperskey: "loan",
                         mappersvalue: "loans/{{loanId}}?associations=all&tenantIdentifier=" + $rootScope.tenantIdentifier,
@@ -63,7 +64,7 @@
                     scope.templateKeyEntity = "Loan";
                 } else {
                     scope.templateKeyEntity = "Client";
-                    scope.mappers.splice(0, 1, {
+                    scope.mappers.push({
                         mappersorder: 0,
                         mapperskey: "client",
                         mappersvalue: "clients/{{clientId}}?tenantIdentifier=" + $rootScope.tenantIdentifier,
