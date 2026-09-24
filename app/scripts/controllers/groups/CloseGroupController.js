@@ -32,4 +32,3 @@
         $log.info("CloseGroupController initialized");
     });
 }(mifosX.controllers || {}));
-

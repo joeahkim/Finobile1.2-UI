@@ -5,14 +5,10 @@
             scope.first = {};
             scope.first.date = new Date();
             scope.formData = {};
-            scope.clientId = routeParams.clientId;
-            scope.groupId = routeParams.groupId;
 
             resourceFactory.groupResource.get({groupId: routeParams.groupId, associations: 'all'}, function (data) {
                 scope.group = data;
                 scope.meeting = data.collectionMeetingCalendar;
-                scope.groupName = scope.group.name;
-
             });
 
             resourceFactory.groupMeetingResource.getMeetingInfo({groupId: routeParams.groupId, templateSource: 'template', calenderId: routeParams.calendarId}, function (data) {
@@ -44,5 +40,3 @@
         $log.info("GroupAttendanceController initialized");
     });
 }(mifosX.controllers || {}));
-
-

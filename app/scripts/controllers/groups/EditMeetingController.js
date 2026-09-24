@@ -99,4 +99,3 @@
         $log.info("EditMeetingController initialized");
     });
 }(mifosX.controllers || {}));
-

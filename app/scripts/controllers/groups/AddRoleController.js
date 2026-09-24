@@ -22,4 +22,3 @@
         $log.info("AddRoleController initialized");
     });
 }(mifosX.controllers || {}));
-

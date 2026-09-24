@@ -78,4 +78,3 @@
         $log.info("AttachMeetingController initialized");
     });
 }(mifosX.controllers || {}));
-
