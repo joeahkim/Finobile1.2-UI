@@ -83,4 +83,3 @@
 mifosX.ng.application.directive("numberFormat", ['$filter', '$locale','$parse', mifosX.directives.NumberFormatDirective]).run(function ($log) {
     $log.info("NumberFormatDirective initialized");
 });
-

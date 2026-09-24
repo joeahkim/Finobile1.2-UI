@@ -153,4 +153,3 @@ Reference from JSfiddle : https://jsfiddle.net/sonicblis/2afea34h/9/
 mifosX.ng.application.directive("scrollable", ['$document', '$interval', '$timeout','$window', mifosX.directives.ScrollableDirective]).run(function ($log) {
     $log.info("ScrollableDirective initialized");
 });
-
