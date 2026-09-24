@@ -1,11 +1,9 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        CreateLoanProductController: function (scope, $rootScope, resourceFactory, location, dateFilter,WizardHandler) {
+        CreateLoanProductController: function (scope, resourceFactory, location, dateFilter) {
             scope.restrictDate = new Date();
             scope.formData = {};
-            scope.loanproduct = {};
             scope.charges = [];
-            scope.accountingOptions = ['None','Cash','Accrual(Periodic)','Accrual(Upfront)'];
             scope.floatingrateoptions = [];
             scope.loanProductConfigurableAttributes = [];
             scope.showOrHideValue = "show";
@@ -80,27 +78,7 @@
                 scope.formData.isLinkedToFloatingInterestRates = false ;
                 scope.formData.allowVariableInstallments = false ;
                 scope.product.interestRecalculationNthDayTypeOptions.push({"code" : "onDay", "id" : -2, "value" : "on day"});
-                scope.loanproduct = angular.copy(scope.formData);
-                scope.isClicked = false;
             });
-
-             scope.$watch('formData',function(newVal){
-                scope.loanproduct = angular.extend(scope.loanproduct,newVal);
-             },true);
-
-             $rootScope.formValue = function(array,model,findattr,retAttr){
-                 findattr = findattr ? findattr : 'id';
-                 retAttr = retAttr ? retAttr : 'value';
-                 console.log(findattr,retAttr,model);
-                 return _.find(array, function (obj) {
-                    return obj[findattr] === model;
-                 })[retAttr];
-            };
-
-            scope.goNext = function(form){
-                WizardHandler.wizard().checkValid(form);
-                scope.isClicked = true;
-            }
 
             scope.chargeSelected = function (chargeId) {
 
@@ -392,7 +370,7 @@
             };
         }
     });
-    mifosX.ng.application.controller('CreateLoanProductController', ['$scope','$rootScope', 'ResourceFactory', '$location', 'dateFilter','WizardHandler', mifosX.controllers.CreateLoanProductController]).run(function ($log) {
+    mifosX.ng.application.controller('CreateLoanProductController', ['$scope', 'ResourceFactory', '$location', 'dateFilter', mifosX.controllers.CreateLoanProductController]).run(function ($log) {
         $log.info("CreateLoanProductController initialized");
     });
 }(mifosX.controllers || {}));

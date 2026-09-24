@@ -16,7 +16,6 @@
                 scope.saveSC();
             };
 
-            scope.FixedDepositsPerPage = 15;
             resourceFactory.fixedDepositProductResource.getAllFixedDepositProducts(function (data) {
                 scope.depositproducts = data;
             });

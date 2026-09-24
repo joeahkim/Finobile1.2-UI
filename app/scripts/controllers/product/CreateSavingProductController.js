@@ -1,15 +1,13 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        CreateSavingProductController: function (scope, $rootScope, resourceFactory, location , WizardHandler) {
+        CreateSavingProductController: function (scope, resourceFactory, location) {
             scope.formData = {};
-            scope.savingproduct = {};
             scope.charges = [];
             scope.showOrHideValue = "show";
             scope.configureFundOptions = [];
             scope.specificIncomeaccounts = [];
             scope.penaltySpecificIncomeaccounts = [];
             scope.configureFundOption = {};
-            scope.isClicked = false;
 
             resourceFactory.savingProductResource.get({resourceType: 'template'}, function (data) {
                 scope.product = data;
@@ -26,28 +24,8 @@
                 scope.formData.interestCalculationType = data.interestCalculationType.id;
                 scope.formData.interestCalculationDaysInYearType = data.interestCalculationDaysInYearType.id;
                 scope.formData.accountingRule = '1';
-                scope.savingproduct = angular.copy(scope.formData);
 
             });
-
-            scope.$watch('formData',function(newVal){
-                scope.savingproduct = angular.extend(scope.savingproduct,newVal);
-            },true);
-
-            scope.goNext = function(form){
-                WizardHandler.wizard().checkValid(form);
-                scope.isClicked = true;
-            }
-
-            scope.formValue = function(array,model,findattr,retAttr){
-                findattr = findattr ? findattr : 'id';
-                retAttr = retAttr ? retAttr : 'value';
-                console.log(findattr,retAttr,model);
-                return _.find(array, function (obj) {
-                    return obj[findattr] === model;
-                })[retAttr];
-            };
-            //$rootScope.formValue is used which is defined in CreateLoanProductController.js
 
             //advanced accounting rule
             scope.showOrHide = function (showOrHideValue) {
@@ -181,7 +159,7 @@
             }
         }
     });
-    mifosX.ng.application.controller('CreateSavingProductController', ['$scope', '$rootScope', 'ResourceFactory', '$location','WizardHandler', mifosX.controllers.CreateSavingProductController]).run(function ($log) {
+    mifosX.ng.application.controller('CreateSavingProductController', ['$scope', 'ResourceFactory', '$location', mifosX.controllers.CreateSavingProductController]).run(function ($log) {
         $log.info("CreateSavingProductController initialized");
     });
 }(mifosX.controllers || {}));
