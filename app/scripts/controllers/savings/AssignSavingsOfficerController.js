@@ -38,4 +38,3 @@
         $log.info("AssignSavingsOfficerController initialized");
     });
 }(mifosX.controllers || {}));
-
