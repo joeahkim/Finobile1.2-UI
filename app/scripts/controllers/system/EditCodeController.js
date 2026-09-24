@@ -50,5 +50,3 @@
         $log.info("EditCodeController initialized");
     });
 }(mifosX.controllers || {}));
-
-

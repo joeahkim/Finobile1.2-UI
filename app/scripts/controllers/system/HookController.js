@@ -18,7 +18,6 @@
                 scope.saveSC();
             };
 
-            scope.HooksPerPage = 15;
             resourceFactory.hookResources.getAllHooks(function (data) {
                 scope.hooks = data;
             });

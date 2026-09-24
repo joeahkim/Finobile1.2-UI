@@ -13,4 +13,3 @@
         $log.info("AddCodeController initialized");
     });
 }(mifosX.controllers || {}));
-

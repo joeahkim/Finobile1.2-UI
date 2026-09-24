@@ -17,5 +17,3 @@
         $log.info("ViewAuditController initialized");
     });
 }(mifosX.controllers || {}));
-
-
