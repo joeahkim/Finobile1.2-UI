@@ -5,7 +5,6 @@
             scope.tellers = [];
             var idToNodeMap = {};
 
-            scope.TellersPerPage = 15;
             resourceFactory.tellerResource.getAllTellers(function (data) {
                 scope.tellers = data;
             });

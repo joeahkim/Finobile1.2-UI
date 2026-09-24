@@ -174,4 +174,3 @@
         $log.info("AddHolController initialized");
     });
 }(mifosX.controllers || {}));
-

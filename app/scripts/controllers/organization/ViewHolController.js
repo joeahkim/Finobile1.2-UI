@@ -58,4 +58,3 @@
         $log.info("ViewHolController initialized");
     });
 }(mifosX.controllers || {}));
-
