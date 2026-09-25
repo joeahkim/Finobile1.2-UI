@@ -37,9 +37,7 @@
                     "shareAccountStatusType.rejected": "statusrejected",
                     "purchasedSharesStatusType.applied": "statuspending",
                     "purchasedSharesStatusType.approved": "statusApproved",
-                    "purchasedSharesStatusType.rejected": "statusrejected",
-                    "charges.StatusType.active.true": "statusactive",
-                    "employees.StatusType.active.true": "statusactive"
+                    "purchasedSharesStatusType.rejected": "statusrejected"
                 }
 
                 return cssClassNameLookup[input];
