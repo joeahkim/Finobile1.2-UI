@@ -92,7 +92,7 @@ angular.module('modified.datepicker', ['strap.position'])
         showToday: true,
         startingDay: 0,
         yearRange: 20,
-        minDate: new Date(new Date().getFullYear(), 0, 1),
+        minDate: null,
         maxDate: null
     })
 
@@ -389,7 +389,7 @@ angular.module('modified.datepicker', ['strap.position'])
                 link: function (originalScope, element, attrs, ngModel) {
 
                     var closeOnDateSelection = angular.isDefined(attrs.closeOnDateSelection) ? scope.$eval(attrs.closeOnDateSelection) : datepickerPopConfig.closeOnDateSelection;
-                    var dateFormat = originalScope.df || attrs.datepickerPop || datepickerPopConfig.dateFormat;
+                    var dateFormat = attrs.datepickerPop || datepickerPopConfig.dateFormat;
 
                     // create a child scope for the datepicker directive so we are not polluting original scope
                     var scope = originalScope.$new();
