@@ -121,12 +121,12 @@
 <hr>
 
 <div class="form-group">
-    <label class="control-label col-sm-3">{{ 'label.input.sharesperclient' | translate }}<span class="required">*</span></label>
+    <label class="control-label col-sm-3">{{ 'label.input.sharesperclient' | translate }}</label>
     <i class="fa fa-question-circle col-sm-1" uib-tooltip="{{'label.tooltip.sharesperclient' | translate}}"></i>
 
     <div class="col-sm-2">
         <input id="minimumshares" placeholder="{{'label.input.minimum' | translate}}" type="text"
-               class="form-control" ng-model="formData.minimumShares" required>
+               class="form-control" ng-model="formData.minimumShares">
     </div>
     <div class="col-sm-2">
         <input type="text" id="nominalsharesperclient" placeholder="{{'label.input.default' | translate}}"
@@ -134,7 +134,7 @@
     </div>
     <div class="col-sm-2">
         <input id="maximumshares" placeholder="{{'label.input.maximum' | translate}}" type="text"
-               class="form-control" ng-model="formData.maximumShares" required>
+               class="form-control" ng-model="formData.maximumShares">
     </div>
     <div class="col-sm-2">
         <form-validate valattributeform="createshareproductform" valattribute="nominalsharesperclient"/>
@@ -224,7 +224,7 @@
             </ng-form>
         </td>
         <td>
-            <a ng-click="deleteMarketPricePeriod($index)"><i class="fa fa-times-circle fa-2x"></i></a>
+            <a ng-click="deleteMarketPricePeriod($index)"><i class="fa fa-times "></i></a>
         </td>
     </tr>
 </table>
@@ -263,7 +263,7 @@
             <td></td>
             <td>{{charge.chargeTimeType.value}}</td>
             <td></td>
-            <td><a href="" ng-click="deleteCharge($index)"><i class="fa fa-times-circle fa-2x"></i></a></td>
+            <td><a href="" ng-click="deleteCharge($index)"><i class="fa fa-times "></i></a></td>
         </tr>
     </table>
 </div>

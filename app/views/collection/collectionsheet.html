@@ -59,7 +59,7 @@
 				    	<div class="col-sm-2">
 					        <button class="btn btn-primary" ng-click="productiveCollectionSheet()">
 					            {{'label.button.productivecollectionsheet' | translate}}
-					            <i class="fa fa-arrow-circle-right"></i></button>
+					            <i class="fa fa-circle-arrow-right"></i></button>
 				        </div>
 				    </div>
 
@@ -91,7 +91,7 @@
 				    	<div class="col-sm-2">
 					        <button class="btn btn-primary" ng-click="previewCollectionSheet()">{{'label.button.collectionsheet' |
 					            translate}}
-					            <i class="fa fa-arrow-circle-right"></i></button>
+					            <i class="fa fa-circle-arrow-right"></i></button>
 						</div>
 				    </div>
 				</div>
@@ -134,6 +134,39 @@
 									<td class="empty"></td>
 									<td class="empty"></td>
 									<td class="empty"></td>
+								</tr>
+								<tr ng-if="group.groupLoans.length > 0 || group.groupSavings.length > 0" style="background-color:#f0f0e0">
+									<td>
+										<div class="table-cell-scrollable">
+											<i class="fa fa-users"></i>&nbsp;{{'label.heading.groupaccounts' | translate}}
+										</div>
+									</td>
+									<td ng-repeat="loanproduct in collectionsheetdata.loanProducts">
+													<span ng-repeat="loan in group.groupLoans" ng-show="loanproduct.id == loan.productId">
+				                                        <div class="col-md-7 paddinglr0px">
+				                                            <input id="total" type="text" class="input-sm form-control" number-format
+																   ng-model="loan.totalDue"
+																   ng-change="sumTotalDueCollection()">
+				                                        </div>
+														<span ng-hide="loan.chargesDue" ng-init="loan.chargesDue = 0">
+														</span>
+				                                        <div class="col-md-5 padd">
+				                                            <input type="text" class="input-sm form-control" number-format ng-model="loan.chargesDue"
+																   ng-change="sumTotalDueCollection()">
+				                                        </div>
+													</span>
+									</td>
+									<td ng-repeat="savingsproduct in collectionsheetdata.savingsProducts">
+				                                <span ng-repeat="savings in group.groupSavings"
+													  ng-show="savingsproduct.id === savings.productId">
+				                                    <div class="col-md-7">
+				                                        <input id="dueAmount" number-format type="text" class="input-sm form-control"
+															   ng-model="savings.dueAmount"
+															   ng-change="sumTotalDueCollection()">
+				                                    </div>
+				                                </span>
+									</td>
+									<td></td>
 								</tr>
 								<tr ng-repeat="client in group.clients">
 									<td>

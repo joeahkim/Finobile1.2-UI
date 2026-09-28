@@ -9,9 +9,7 @@
                 <div class="pull-right">
                     <a ng-show="isTreeView" ng-click="isTreeView=!isTreeView" class="btn btn-primary"><i class="fa fa-list "></i>{{'label.button.listview' | translate}}</a>
                     <a ng-hide="isTreeView" ng-click="isTreeView=!isTreeView" class="btn btn-primary"><i class="fa fa-sitemap "></i>{{'label.button.treeview' | translate}}</a>
-                    <a href="#/createoffice" class="btn btn-primary" has-permission='CREATE_OFFICE'><i class="fa fa-plus "></i>{{'label.button.createoffice' | translate}}</a>&nbsp;&nbsp;
-                		<a href="#/bulkimportoffices" class="btn btn-primary pull-right" has-permission='CREATE_OFFICE'><i
- +                            class="fa fa-upload"></i>&nbsp;{{'label.button.importoffices' | translate}}</a>
+                    <a href="#/createoffice" class="btn btn-primary" has-permission='CREATE_OFFICE'><i class="fa fa-plus "></i>{{'label.button.createoffice' | translate}}</a>
                 </div>
             </div>
             <br>
@@ -28,7 +26,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="pointer-main" dir-paginate="office in offices | orderBy:'name':reverse  | filter:filterText |  itemsPerPage: OfficesPerPage">
+                    <tr class="pointer-main" ng-repeat="office in offices| orderBy:'name':reverse  | filter:filterText">
                         <td class="pointer" data-ng-click="routeTo(office.id)">{{office.name}}</td>
                         <td class="pointer" data-ng-click="routeTo(office.id)">{{office.externalId}}</td>
                         <td class="pointer" data-ng-click="routeTo(office.id)">{{office.parentName}}</td>
@@ -36,7 +34,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <dir-pagination-controls boundary-links="true" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
             </div>
             <div ng-show="isTreeView">
                 <div

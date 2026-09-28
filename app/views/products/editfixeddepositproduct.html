@@ -281,7 +281,7 @@
 </div>
 <div class="form-group">
     <label class="control-label col-sm-2" for="name">{{ 'label.input.interestratechart.primary.grouping.amount' |
-        translate }}</label>
+        translate }}<span class="required">*</span></label>
     <div class="col-sm-2">
         <label class="checkbox">
             <input id="isPrimaryGroupingByAmount" type="checkbox" ng-model="isPrimaryGroupingByAmount">
@@ -387,7 +387,7 @@
             <td>{{charge.chargeCalculationType.value}}</td>
             <td>{{charge.amount | number}}</td>
             <td>{{charge.chargeTimeType.value}}</td>
-            <td><a href="" ng-click="deleteCharge($index)"><i class="fa fa-times-circle fa-2x"></i></a></td>
+            <td><a href="" ng-click="deleteCharge($index)"><i class="fa fa-times "></i></a></td>
         </tr>
     </table>
 </div>
@@ -602,6 +602,7 @@
                             | translate}}</a>
                     </div>
                 </td>
+                <td>&nbsp;</td>
             </tr>
             <tr ng-repeat="incentiveData in chartSlab.incentives">
                 <td>

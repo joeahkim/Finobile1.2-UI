@@ -65,7 +65,7 @@
         </td>
         <td class="paddedbottom10">
             <input id="expectedDisbursementDate" type="text" datepicker-pop="dd MMMM yyyy" class="form-control"
-                   ng-model="formData.expectedDisbursementDate" is-open="opened1" min="minDate" max="'2020-06-22'"
+                   ng-model="formData.expectedDisbursementDate" is-open="opened1" min="minDate" max="maxDate"
                    date-disabled="disabled(date, mode)" late-Validate/>
         </td>
     </tr>
@@ -181,13 +181,13 @@
                 <td class="paddedbottom10" ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.repaymentsStartingFromDate == true">
                     <input id="repaymentsStartingFromDate" type="text" datepicker-pop="dd MMMM yyyy" class="form-control"
                            ng-model="formData.repaymentsStartingFromDate" is-open="opened3" min="minDate"
-                           max="'2020-06-22'"/>
+                           max="maxDate"/>
                 </td>
                 <td ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestChargedFromDate == true"><label class="control-label">{{ 'label.input.interestchargedfrom' | translate }}:</label></td>
                 <td class="paddedbottom10" ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestChargedFromDate == true">
                     <input id="interestChargedFromDate" type="text" datepicker-pop="dd MMMM yyyy" class="form-control"
                            ng-model="formData.interestChargedFromDate" is-open="opened2" min="minDate"
-                           max="'2020-06-22'"/>
+                           max="maxDate"/>
                 </td>
             </tr>
 
@@ -200,7 +200,7 @@
                 </td>
                 <td ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestType == true"><label>{{ 'label.input.interestmethod' | translate }}</label></td>
                 <td class="paddedbottom10" ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestType == true">
-                     <select id="interestType" ng-model="formData.interestType" class="form-control width170px"
+                    <select id="interestType" ng-model="formData.interestType" class="form-control width170px"
                             ng-options="interestType.id as interestType.value for interestType in loanaccountinfo.interestTypeOptions"
                             value="{{interestType.id}}" ng-disabled="!loanaccountinfo.product.allowAttributeOverrides.interestType"/>
                 </td>
@@ -232,9 +232,6 @@
                             ng-options="amortizationType.id as amortizationType.value for amortizationType in loanaccountinfo.amortizationTypeOptions"
                             value="{{amortizationType.id}}" ng-disabled="!loanaccountinfo.product.allowAttributeOverrides.amortizationType"/>
                 </td>
-                <td ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestType == true"><label>{{ 'label.input.isequalamortization' | translate }}</label></td>
-                <td class="paddedbottom10" ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestType == true"> <input type="checkbox" ng-model="formData.isEqualAmortization" ng-true-value="true" ng-false-value="false">
-                </td>
             </tr>
             <tr>
                 <td ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestCalculationPeriodType == true"><label>{{ 'label.input.interestcalculationperiod' | translate }}&nbsp;<span
@@ -244,7 +241,7 @@
                             ng-options="interestCalculationPeriodType.id as interestCalculationPeriodType.value for interestCalculationPeriodType in loanaccountinfo.interestCalculationPeriodTypeOptions" class="form-control width170px"
                             value="{{interestCalculationPeriodType.id}}" ng-disabled="!loanaccountinfo.product.allowAttributeOverrides.interestCalculationPeriodType"/>
                 </td>
-                <td colspan="2" ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestCalculationPeriodType == true || formData.interestCalculationPeriodType == 0"><label>{{ 'label.input.allowpartialperiodinterestcalcualtion' | translate }}&nbsp;</label>
+                <td colspan="2" ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestCalculationPeriodType == true || formData.interestCalculationPeriodType == 0"><label>{{ 'label.input.allowpartialperiodinterestcalcualtion' | translate }}&nbsp;<span class="required">*</span>: &nbsp;</label>
                     <label class="checkbox control-label">
                         <input id="allowPartialPeriodInterestCalcualtion" type="checkbox"
                                ng-model="formData.allowPartialPeriodInterestCalcualtion" ng-disabled="!loanaccountinfo.product.allowAttributeOverrides.interestCalculationPeriodType">
@@ -426,14 +423,14 @@
                                datepicker-pop="dd MMMM yyyy" class="form-control"
                                placeholder="{{'label.input.expecteddisbursementon' | translate}}"
                                ng-model="disbursementDetail.expectedDisbursementDate" is-open="'openedtranche'+$index"
-                               min="minDate" max="'2020-06-22'"/>
+                               min="minDate" max="maxDate"/>
                     </td>
                     <td>
                         <input id="{{disbursementDetail[$index].principal}}" class="form-control" number-format type="text"
                                ng-model="disbursementDetail.principal"
                                placeholder="{{'label.input.principal' | translate}}">
                     </td>
-                    <td><a ng-click="deleteTranches($index)"><i class="fa fa-times-circle fa-2x"></i></a></td>
+                    <td><a ng-click="deleteTranches($index)"><i class="fa fa-times "></i></a></td>
                 </tr>
                 </tbody>
             </table>
@@ -466,9 +463,9 @@
                 <td>
                     <input id="charges[{{$index}}].duedate" type="text" datepicker-pop="dd MMMM yyyy" class="form-control"
                            placeholder="{{'label.input.duedate' | translate}}" ng-model="charge.dueDate"
-                           is-open="'openedch'+$index" min="minDate" max="'2020-06-22'"/>
+                           is-open="'openedch'+$index" min="minDate" max="maxDate"/>
                 </td>
-                <td><a ng-click="deleteCharge($index)"><i class="fa fa-times-circle fa-2x"></i></a></td>
+                <td><a ng-click="deleteCharge($index)"><i class="fa fa-times "></i></a></td>
             </tr>
         </table>
         <div ng-show="loanaccountinfo.overdueCharges.length>0">
@@ -514,7 +511,7 @@
                            ng-model="collateral.value"></td>
                 <td><input id="{{collaterals[$index].description}}" class="form-control" type="text" ng-model="collateral.description"
                            placeholder="{{'label.input.description' | translate}}"></td>
-                <td><a ng-click="deleteCollateral($index)"><i class="fa fa-times-circle fa-2x"></i></a></td>
+                <td><a ng-click="deleteCollateral($index)"><i class="fa fa-times "></i></a></td>
             </tr>
         </table>
         </div>

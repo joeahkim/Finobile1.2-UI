@@ -67,6 +67,16 @@
                                 <td scope="colgroup" colspan="{{collectionsheetdata.loanProducts.length}}">&nbsp;</td>
                                 <td colspan="1" scope="colgroup">&nbsp;</td>
                             </tr>
+                            <tr ng-if="group.groupLoans.length > 0" style="background-color:#f0f0e0">
+                                <td><i class="fa fa-users"></i>&nbsp;{{'label.heading.groupaccounts' | translate}}</td>
+                                <td ng-repeat="loanproduct in collectionsheetdata.loanProducts">
+                                  <span ng-repeat="loan in group.groupLoans" ng-show="loanproduct.id == loan.productId">
+                                    <input id="total" type="text" class="input-smaller" ng-model="loan.totalDue"
+                                           number-format ng-change="bulkRepaymentTransactionAmountChange()">
+                                  </span>
+                                </td>
+                                <td></td>
+                            </tr>
                             <tr ng-repeat="client in group.clients">
                                 <td>({{client.clientId}}){{client.clientName}}</td>
                                 <td ng-repeat="loanproduct in collectionsheetdata.loanProducts">
