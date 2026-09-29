@@ -1,7 +1,7 @@
-(function (module) {
+   (function (module) {
     mifosX.controllers = _.extend(module, {
         EditMeetingController: function (scope, resourceFactory, location, routeParams, dateFilter) {
-            scope.formData = {};
+         scope.formData = {};
             resourceFactory.attachMeetingResource.get({groupOrCenter: routeParams.entityType, groupOrCenterId: routeParams.groupOrCenterId,
                 templateSource: routeParams.calendarId, template: 'true'}, function (data) {
                 scope.entityType = routeParams.entityType;
@@ -99,4 +99,3 @@
         $log.info("EditMeetingController initialized");
     });
 }(mifosX.controllers || {}));
-

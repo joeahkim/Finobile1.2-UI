@@ -47,5 +47,3 @@
         $log.info("EditMeetingBasedOnMeetingDatesController initialized");
     });
 }(mifosX.controllers || {}));
-
-
