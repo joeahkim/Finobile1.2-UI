@@ -249,6 +249,12 @@
                                 scope.sumGroupLoansDueCollection(group, loan);
                             });
                         });
+                        _.each(group.groupLoans, function (loan) {
+                            scope.sumGroupLoansDueCollection(group, loan);
+                        });
+                        _.each(group.groupSavings, function (saving) {
+                            scope.sumGroupSavingsDueCollection(group, saving);
+                        });
                     }
                 );
             };
@@ -407,6 +413,30 @@
                                 scope.bulkRepaymentTransactions.push(loanTransaction);
                             });
                         });
+
+                        _.each(group.groupLoans, function (loan) {
+                            var totalDue = scope.getLoanTotalDueAmount(loan);
+                            var loanTransaction = {
+                                loanId:loan.loanId,
+                                transactionAmount:totalDue
+                            };
+                            scope.bulkRepaymentTransactions.push(loanTransaction);
+                        });
+
+                        _.each(group.groupSavings, function (saving) {
+                            var dueAmount = saving.dueAmount;
+                            if (isNaN(dueAmount)) {
+                                dueAmount = parseInt(0);
+                            }
+                            var savingsTransaction = {
+                                savingsId:saving.savingsId,
+                                transactionAmount:dueAmount,
+                                depositAccountType: saving.depositAccountType=='Saving Deposit'?100:(saving.depositAccountType=='Recurring Deposit'?300:400)
+                            };
+                            if(savingsTransaction.transactionAmount>0){
+                                scope.bulkSavingsDueTransactions.push(savingsTransaction);
+                            }
+                        });
                     }
                 );
             };
@@ -421,6 +451,7 @@
                 }
                 scope.formData.actualDisbursementDate = this.formData.transactionDate;
 
+                scope.clientsAttendance = [];
                 _.each(scope.savingsgroups, function (group) {
                     _.each(group.clients, function (client) {
                         var clientAttendanceDetails = {
@@ -468,4 +499,3 @@
 }
     (mifosX.controllers || {})
     )
-;

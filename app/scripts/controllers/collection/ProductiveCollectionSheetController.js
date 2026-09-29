@@ -156,6 +156,30 @@
                             }
                         }
                     }
+
+                    var groupLoanArray = scope.groupArray[i].groupLoans;
+                    if (groupLoanArray) {
+                        for (var k = 0; k < groupLoanArray.length; k++) {
+                            var gloan = groupLoanArray[k];
+                            if (gloan.totalDue > 0) {
+                                scope.bulkRepaymentTransactions.push({
+                                    loanId: gloan.loanId,
+                                    transactionAmount: gloan.totalDue
+                                });
+                            }
+                            for (var l = 0; l < loanProductArrayDup.length; l++) {
+                                if (loanProductArrayDup[l].productId == gloan.productId) {
+                                    if (gloan.chargesDue) {
+                                        loanProductArrayDup[l].transactionAmount = Number(loanProductArrayDup[l].transactionAmount + Number(gloan.totalDue) + Number(gloan.chargesDue));
+                                        loanProductArrayDup[l].transactionAmount = Math.ceil(loanProductArrayDup[l].transactionAmount * 100) / 100;
+                                    } else {
+                                        loanProductArrayDup[l].transactionAmount = Number(loanProductArrayDup[l].transactionAmount + Number(gloan.totalDue));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     temp.loanProductArrayDup = loanProductArrayDup;
                     scope.groupTotal.push(temp);
                 }
