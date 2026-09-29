@@ -12,17 +12,15 @@
             resourceFactory.centerResource.get({centerId: routeParams.id, template: 'true', associations: 'groupMembers'}, function (data) {
                 scope.data = data;
                 scope.groups = data.groupMembers;
-
-                resourceFactory.groupResource.getAllGroups({orderBy: 'name', sortOrder: 'ASC',orphansOnly: true,
-                    officeId : scope.data.officeId},function(data){
-                    scope.allGroups = data;
-                });
             });
-            
+
             scope.groupsOptions = function(value){
-                return _.filter(scope.allGroups,function(group){
-                        return group.name.indexOf(value) != -1
+                var deferred = $q.defer();
+                resourceFactory.groupResource.getAllGroups({name: value ,orderBy: 'name', sortOrder: 'ASC',orphansOnly: true,
+                    officeId : scope.data.officeId},function(data){
+                    deferred.resolve(data);
                 });
+                return deferred.promise;
             };
 
             scope.add = function () {

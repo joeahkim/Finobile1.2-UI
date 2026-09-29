@@ -32,4 +32,3 @@
         $log.info("CloseCenterController initialized");
     });
 }(mifosX.controllers || {}));
-
