@@ -32,4 +32,3 @@
         $log.info("UnAssignSavingsOfficerController initialized");
     });
 }(mifosX.controllers || {}));
-
