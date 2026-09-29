@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ViewLoanDetailsController: function (scope, routeParams, resourceFactory,paginatorService, location, route, http, $uibModal, dateFilter, API_VERSION, $sce, $rootScope) {
+        ViewLoanDetailsController: function (scope, routeParams, resourceFactory,paginatorSerivce, location, route, http, $uibModal, dateFilter, API_VERSION, $sce, $rootScope) {
             scope.loandocuments = [];
             scope.report = false;
             scope.hidePentahoReport = true;
@@ -13,7 +13,8 @@
             scope.routeTo = function (loanId, transactionId, transactionTypeId) {
                 if (transactionTypeId == 2 || transactionTypeId == 4 || transactionTypeId == 1) {
                     location.path('/viewloantrxn/' + loanId + '/trxnId/' + transactionId);
-                };
+                }
+                ;
             };
 
             /***
@@ -149,6 +150,98 @@
                 };
             };
 
+            scope.waiveAllCharges = function () {
+                var penaltyCharges = [];
+                var totalAmount = 0;
+                if (scope.charges) {
+                    for (var i = 0; i < scope.charges.length; i++) {
+                        var charge = scope.charges[i];
+                        if (charge.penalty && !charge.paid && !charge.waived) {
+                            penaltyCharges.push(charge);
+                            totalAmount += charge.amountOutstanding || 0;
+                        }
+                    }
+                }
+                $uibModal.open({
+                    template: '<div class="modal-header silver">' +
+                        '<h3 class="bolder">Confirm - Waive All Penalty Charges</h3>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        '<p>Are you sure you want to waive <strong>{{chargeCount}}</strong> penalty charge(s) totalling <strong>{{totalAmount | number}}</strong>?</p>' +
+                        '<br>' +
+                        '<button class="btn btn-warning" ng-click="cancel()">Cancel</button> ' +
+                        '<button class="btn btn-primary" ng-click="confirm()">Confirm</button>' +
+                        '</div>',
+                    controller: function ($scope, $uibModalInstance) {
+                        $scope.chargeCount = penaltyCharges.length;
+                        $scope.totalAmount = totalAmount;
+                        $scope.confirm = function () {
+                            resourceFactory.LoanAccountResource.save({loanId: routeParams.id, command: 'waiveAllCharges'}, {}, function (data) {
+                                $uibModalInstance.close('confirm');
+                                route.reload();
+                            });
+                        };
+                        $scope.cancel = function () {
+                            $uibModalInstance.dismiss('cancel');
+                        };
+                    }
+                });
+            };
+
+            scope.getSelectedChargeIds = function () {
+                var ids = [];
+                if (scope.charges) {
+                    for (var i = 0; i < scope.charges.length; i++) {
+                        var charge = scope.charges[i];
+                        if (charge.selected && charge.penalty && !charge.paid && !charge.waived) {
+                            ids.push(charge.id);
+                        }
+                    }
+                }
+                return ids;
+            };
+
+            scope.waiveSelectedCharges = function () {
+                var selectedCharges = [];
+                var totalAmount = 0;
+                var chargeIds = [];
+                if (scope.charges) {
+                    for (var i = 0; i < scope.charges.length; i++) {
+                        var charge = scope.charges[i];
+                        if (charge.selected && charge.penalty && !charge.paid && !charge.waived) {
+                            selectedCharges.push(charge);
+                            totalAmount += charge.amountOutstanding || 0;
+                            chargeIds.push(charge.id);
+                        }
+                    }
+                }
+                if (chargeIds.length === 0) { return; }
+                $uibModal.open({
+                    template: '<div class="modal-header silver">' +
+                        '<h3 class="bolder">Confirm - Waive Selected Charges</h3>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        '<p>Are you sure you want to waive <strong>{{chargeCount}}</strong> selected penalty charge(s) totalling <strong>{{totalAmount | number}}</strong>?</p>' +
+                        '<br>' +
+                        '<button class="btn btn-warning" ng-click="cancel()">Cancel</button> ' +
+                        '<button class="btn btn-primary" ng-click="confirm()">Confirm</button>' +
+                        '</div>',
+                    controller: function ($scope, $uibModalInstance) {
+                        $scope.chargeCount = chargeIds.length;
+                        $scope.totalAmount = totalAmount;
+                        $scope.confirm = function () {
+                            resourceFactory.LoanAccountResource.save({loanId: routeParams.id, command: 'waiveSelectedCharges'}, {chargeIds: chargeIds}, function (data) {
+                                $uibModalInstance.close('confirm');
+                                route.reload();
+                            });
+                        };
+                        $scope.cancel = function () {
+                            $uibModalInstance.dismiss('cancel');
+                        };
+                    }
+                });
+            };
+
             resourceFactory.LoanAccountResource.getLoanAccountDetails({loanId: routeParams.id, associations: 'all',exclude: 'guarantors,futureSchedule'}, function (data) {
                 scope.loandetails = data;
                 scope.convertDateArrayToObject('date');
@@ -161,6 +254,7 @@
                 scope.decimals = data.currency.decimalPlaces;
                 if (scope.loandetails.charges) {
                     scope.charges = scope.loandetails.charges;
+                    scope.hasWaivablePenalties = false;
                     for (var i in scope.charges) {
                         if (scope.charges[i].paid || scope.charges[i].waived || scope.charges[i].chargeTimeType.value == 'Disbursement' || scope.loandetails.status.value != 'Active') {
                             var actionFlag = true;
@@ -169,6 +263,9 @@
                             var actionFlag = false;
                         }
                         scope.charges[i].actionFlag = actionFlag;
+                        if (scope.charges[i].penalty && !scope.charges[i].paid && !scope.charges[i].waived && scope.loandetails.status.value == 'Active') {
+                            scope.hasWaivablePenalties = true;
+                        }
                     }
 
                     scope.chargeTableShow = true;
@@ -474,12 +571,6 @@
                         var loandocs = {};
                         loandocs = API_VERSION + '/loans/' + data[i].parentEntityId + '/documents/' + data[i].id + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier;
                         data[i].docUrl = loandocs;
-                        if (data[i].fileName)
-                            if (data[i].fileName.toLowerCase().indexOf('.jpg') != -1 || data[i].fileName.toLowerCase().indexOf('.jpeg') != -1 || data[i].fileName.toLowerCase().indexOf('.png') != -1)
-                                data[i].fileIsImage = true;
-                        if (data[i].type)
-                             if (data[i].type.toLowerCase().indexOf('image') != -1)
-                                data[i].fileIsImage = true;
                     }
                     scope.loandocuments = data;
                 });
@@ -494,7 +585,6 @@
                 resourceFactory.DataTablesResource.getTableDetails({datatablename: datatable.registeredTableName,
                     entityId: routeParams.id, genericResultSet: 'true'}, function (data) {
                     scope.datatabledetails = data;
-                    console.log(data);
                     scope.datatabledetails.isData = data.data.length > 0 ? true : false;
                     scope.datatabledetails.isMultirow = data.columnHeaders[0].columnName == "id" ? true : false;
                     scope.showDataTableAddButton = !scope.datatabledetails.isData || scope.datatabledetails.isMultirow;
@@ -635,15 +725,6 @@
                 resourceFactory.LoanDocumentResource.delete({loanId: scope.loandetails.id, documentId: documentId}, '', function (data) {
                     scope.loandocuments.splice(index, 1);
                 });
-            };
-
-            scope.previewDocument = function (url, fileName) {
-                scope.preview =  true;
-                scope.fileUrl = scope.hostUrl + url;
-                if(fileName.toLowerCase().indexOf('.png') != -1)
-                    scope.fileType = 'image/png';
-                else if((fileName.toLowerCase().indexOf('.jpg') != -1) || (fileName.toLowerCase().indexOf('.jpeg') != -1))
-                    scope.fileType = 'image/jpg';
             };
 
             scope.downloadDocument = function (documentId) {
