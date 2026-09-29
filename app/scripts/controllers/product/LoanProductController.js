@@ -18,7 +18,6 @@
                 scope.saveSC();
             };
 
-            scope.LoanProductsPerPage = 15;
             scope.$broadcast('LoanProductDataLoadingStartEvent');
             resourceFactory.loanProductResource.getAllLoanProducts(function (data) {
                 scope.loanproducts = data;

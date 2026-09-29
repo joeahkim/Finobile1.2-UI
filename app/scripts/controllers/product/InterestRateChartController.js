@@ -1,4 +1,4 @@
- (function(module) {
+(function(module) {
   mifosX.controllers = _.extend(module, {
     InterestRateChartController: function(scope, routeParams, resourceFactory, location,$uibModal) {
         scope.edit = function(id){

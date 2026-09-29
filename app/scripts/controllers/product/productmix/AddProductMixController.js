@@ -75,4 +75,3 @@
         $log.info("AddProductMixController initialized");
     });
 }(mifosX.controllers || {}));
-

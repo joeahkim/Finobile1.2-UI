@@ -31,7 +31,6 @@
                     scope.addfeefrequency = false;
                     scope.showGLAccount = false;
                     scope.showPenalty = false ;
-                    scope.flag = true;
                 }else {
                     scope.flag = true;
                     scope.template.chargeCalculationTypeOptions = data.clientChargeCalculationTypeOptions;
