@@ -65,12 +65,7 @@
                 scope.campaignData.id = data.id;
                 scope.campaignData.campaignName = data.campaignName;
                 scope.campaignData.campaignMessage = data.campaignMessage;
-                if(data.providerId){
-                    scope.campaignData.smsProvider = data.providerId;
-                }else{
-                    scope.campaignData.smsProvider = null;
-                }                
-                scope.campaignData.isNotification = data.isNotification;
+                scope.campaignData.smsProvider = data.providerId;
                 scope.campaignData.triggerType = data.triggerType.id;
                 scope.campaignData.campaignType = data.campaignType.id;
                 scope.campaignData.report = data.runReportId;
@@ -229,24 +224,13 @@
                     recurrenceStartDate: scope.scheduledDateTime,
                     dateTimeFormat: scope.dft,
                     runReportId : scope.campaignData.report,
-                    paramValue : scope.paramValues,
-                    isNotification : scope.campaignData.isNotification
+                    paramValue : scope.paramValues
                 }
 
                 resourceFactory.smsCampaignResource.update({campaignId: routeParams.campaignId}, scope.submissionData, function(data) {
                     location.path('/viewsmscampaign/' + routeParams.campaignId);
                 });
 
-            };
-
-
-
-            scope.getcampaignType = function(){
-                if(scope.campaignData.isNotification==false){
-                    return 1;
-                }else{
-                    return 2;
-                }
             };
 
             var setDisableTimeout = function() {

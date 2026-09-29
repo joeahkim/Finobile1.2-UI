@@ -21,8 +21,6 @@
                 scope.saveSC();
             };
 
-            scope.HolidaysPerPage =15;
-
             resourceFactory.holResource.getAllHols({officeId: scope.formData.officeId}, function (data) {
                 scope.holidays = data;
             });

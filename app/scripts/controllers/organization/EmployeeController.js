@@ -17,7 +17,6 @@
                 scope.saveSC();
             };
 
-            scope.EmployeesPerPage = 15;
             resourceFactory.employeeResource.getAllEmployees(function (data) {
                 scope.employees = data;
             });

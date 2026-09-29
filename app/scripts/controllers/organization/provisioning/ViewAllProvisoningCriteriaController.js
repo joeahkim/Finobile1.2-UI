@@ -25,8 +25,6 @@
                 scope.searchCriteria.criterias = scope.filterText;
                 scope.saveSC();
             };
-
-            scope.ProvisioningPerPage = 15;
             resourceFactory.provisioningcriteria.getAll(function (data) {
                 scope.criterias = data;
             });
