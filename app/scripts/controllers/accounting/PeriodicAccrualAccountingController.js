@@ -1,4 +1,3 @@
-
 (function (module) {
     mifosX.controllers = _.extend(module, {
         PeriodicAccrualAccountingController: function (scope, resourceFactory, location, translate, routeParams, dateFilter) {
