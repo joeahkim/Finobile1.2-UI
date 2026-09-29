@@ -7,7 +7,7 @@
             scope.surveyData = {};
             scope.survey = {};
 
-            resourceFactory.surveyResource.getAll({isActive: true}, function (data) {
+            resourceFactory.surveyResource.get({}, function (data) {
                 scope.surveys = data;
             });
 
@@ -43,11 +43,8 @@
             scope.submit = function () {
                 this.formData.userId = localStorageService.getFromLocalStorage('userData').userId;
                 this.formData.clientId = routeParams.clientId;
-                this.formData.surveyId = scope.surveyData.id;
+                this.formData.createdOn = new Date().getTime();
                 this.formData.scorecardValues = [];
-                this.formData.surveyName = '';
-                this.formData.username = '';
-                this.formData.id = 0;
 
                 for(i=0; i < scope.surveyData.questionDatas.length; i++){
                     if(scope.surveyData.questionDatas[i].answer) {
@@ -55,26 +52,17 @@
                         tmp.questionId = scope.surveyData.questionDatas[i].id;
                         tmp.responseId = scope.surveyData.questionDatas[i].answer.id
                         tmp.value = scope.surveyData.questionDatas[i].answer.value
-                        tmp.createdOn = new Date().getTime();
                         this.formData.scorecardValues.push(tmp);
                     }
                 }
                 resourceFactory.surveyScorecardResource.post({surveyId: scope.surveyData.id}, this.formData, function (data) {
-                    location.path('/clients/survey/' + scope.clientId);
+                    location.path('/viewclient/' + scope.clientId);
                 });
-            };
-            scope.isAnyResponse = function(){
-                for(i=0; i < scope.surveyData.questionDatas.length; i++){
-                    if(scope.surveyData.questionDatas[i].answer) {
-                        return false;
-                    }
-                }
-                return true;
             };
 
             scope.cancel = function () {
                 if (scope.clientId) {
-                    location.path('/clients/survey/' + scope.clientId);
+                    location.path('/viewclient/' + scope.clientId);
                 } else {
                     location.path('/clients');
                 }

@@ -28,4 +28,3 @@
         $log.info("ClientIdentifierController initialized");
     });
 }(mifosX.controllers || {}));
-
