@@ -19,7 +19,6 @@
              scope.saveSC();
              };*/
 
-            scope.UsersPerPage = 15;
             resourceFactory.userListResource.getAllUsers(function (data) {
                 scope.users = data;
             });
